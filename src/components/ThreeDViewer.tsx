@@ -1,10 +1,11 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid, Environment, Stats } from '@react-three/drei';
-import { Suspense, useState, useRef } from 'react';
+import { Suspense, useState, useRef, useEffect } from 'react';
 import { Mesh, BoxGeometry, SphereGeometry, ConeGeometry } from 'three';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, RotateCcw, AlertTriangle, Monitor } from 'lucide-react';
 
 interface Model3DProps {
   position: [number, number, number];
@@ -39,6 +40,83 @@ interface ThreeDViewerProps {
   modelData?: any;
   showStats?: boolean;
 }
+
+// WebGL detection utility
+const detectWebGL = (): boolean => {
+  try {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    return !!context;
+  } catch (error) {
+    return false;
+  }
+};
+
+// WebGL Fallback Component
+const WebGLFallback = () => (
+  <div className="h-full flex items-center justify-center p-8">
+    <Alert className="max-w-lg border-destructive/50 bg-destructive/10">
+      <AlertTriangle className="h-4 w-4 text-destructive" />
+      <AlertTitle className="text-destructive">WebGL غير متاح</AlertTitle>
+      <AlertDescription className="mt-2 space-y-2">
+        <p>هذه الأداة تتطلب دعم WebGL لعرض النماذج ثلاثية الأبعاد.</p>
+        <div className="text-sm space-y-1 mt-4">
+          <p className="font-medium">الحلول المقترحة:</p>
+          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+            <li>تأكد من أن متصفحك يدعم WebGL</li>
+            <li>فعّل تسريع الأجهزة في إعدادات المتصفح</li>
+            <li>حدّث برامج تشغيل كرت الرسومات</li>
+            <li>جرب متصفحاً آخر (Chrome, Firefox, Edge)</li>
+          </ul>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => window.location.reload()} 
+          className="mt-4"
+        >
+          <Monitor className="h-4 w-4 mr-2" />
+          إعادة تحميل الصفحة
+        </Button>
+      </AlertDescription>
+    </Alert>
+  </div>
+);
+
+// Safe Canvas Wrapper Component
+const SafeCanvas = ({ children, fallback, ...props }: any) => {
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setWebglSupported(detectWebGL());
+  }, []);
+
+  if (webglSupported === null) {
+    // Loading state
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!webglSupported || hasError) {
+    return fallback || <WebGLFallback />;
+  }
+
+  try {
+    return (
+      <Canvas {...props} onCreated={() => setHasError(false)}>
+        {children}
+      </Canvas>
+    );
+  } catch (error) {
+    console.error('Canvas error:', error);
+    setHasError(true);
+    return fallback || <WebGLFallback />;
+  }
+};
 
 export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -82,8 +160,8 @@ export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps)
         </div>
       )}
 
-      {/* 3D Canvas */}
-      <Canvas
+      {/* 3D Canvas with WebGL Error Handling */}
+      <SafeCanvas
         camera={{ 
           position: [8, 6, 8], 
           fov: 50,
@@ -91,6 +169,7 @@ export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps)
           far: 1000
         }}
         className="w-full h-full"
+        fallback={<WebGLFallback />}
       >
         <Suspense fallback={null}>
           {/* Environment and Lighting */}
@@ -135,7 +214,7 @@ export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps)
           {/* Performance Stats */}
           {showStats && <Stats />}
         </Suspense>
-      </Canvas>
+      </SafeCanvas>
     </Card>
   );
 };
