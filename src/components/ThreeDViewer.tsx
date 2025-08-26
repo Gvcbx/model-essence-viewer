@@ -83,39 +83,77 @@ const WebGLFallback = () => (
   </div>
 );
 
-// Safe Canvas Wrapper Component
+// Safe Canvas Wrapper Component that prevents Canvas rendering when WebGL is not supported
 const SafeCanvas = ({ children, fallback, ...props }: any) => {
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setWebglSupported(detectWebGL());
+    const checkWebGL = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        
+        if (!gl) {
+          console.log('WebGL not supported - no context available');
+          setWebglSupported(false);
+          return;
+        }
+
+        // Type guard to ensure we have a WebGL context
+        if (!('getParameter' in gl) || !('createBuffer' in gl)) {
+          console.log('WebGL context does not have required methods');
+          setWebglSupported(false);
+          return;
+        }
+        
+        // Check if WebGL context is working properly
+        try {
+          const buffer = (gl as WebGLRenderingContext).createBuffer();
+          if (!buffer) {
+            console.log('WebGL buffer creation failed - showing fallback');
+            setWebglSupported(false);
+            return;
+          }
+        } catch (bufferError) {
+          console.log('WebGL buffer creation threw error:', bufferError);
+          setWebglSupported(false);
+          return;
+        }
+        
+        console.log('WebGL is supported and functional');
+        setWebglSupported(true);
+      } catch (error) {
+        console.error('WebGL detection failed:', error);
+        setWebglSupported(false);
+      }
+    };
+
+    checkWebGL();
   }, []);
 
+  // Show loading state while checking WebGL support
   if (webglSupported === null) {
-    // Loading state
     return (
       <div className="h-full flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2 text-sm text-muted-foreground">فحص دعم WebGL...</span>
       </div>
     );
   }
 
-  if (!webglSupported || hasError) {
+  // Show fallback if WebGL is not supported - DO NOT render Canvas at all
+  if (!webglSupported) {
+    console.log('Rendering WebGL fallback');
     return fallback || <WebGLFallback />;
   }
 
-  try {
-    return (
-      <Canvas {...props} onCreated={() => setHasError(false)}>
-        {children}
-      </Canvas>
-    );
-  } catch (error) {
-    console.error('Canvas error:', error);
-    setHasError(true);
-    return fallback || <WebGLFallback />;
-  }
+  // Only render Canvas if WebGL is fully supported
+  console.log('Rendering Canvas with WebGL support');
+  return (
+    <Canvas {...props}>
+      {children}
+    </Canvas>
+  );
 };
 
 export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps) => {
