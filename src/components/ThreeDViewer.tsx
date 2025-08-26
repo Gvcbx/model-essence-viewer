@@ -41,13 +41,43 @@ interface ThreeDViewerProps {
   showStats?: boolean;
 }
 
-// WebGL detection utility
-const detectWebGL = (): boolean => {
+// WebGL detection utility using THREE.js WebGLRenderer
+const detectWebGLWithThreeJS = async (): Promise<boolean> => {
   try {
+    // Dynamic import to avoid importing THREE.js when not needed
+    const THREE = await import('three');
+    
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    return !!context;
+    canvas.width = 1;
+    canvas.height = 1;
+    canvas.style.display = 'none';
+    document.body.appendChild(canvas);
+    
+    try {
+      // Try to create a WebGLRenderer with the same settings as react-three-fiber
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'default'
+      });
+      
+      // Test if renderer is functional
+      renderer.setSize(1, 1);
+      renderer.render(new THREE.Scene(), new THREE.PerspectiveCamera());
+      
+      // Clean up
+      renderer.dispose();
+      document.body.removeChild(canvas);
+      
+      return true;
+    } catch (rendererError) {
+      console.log('THREE.js WebGLRenderer creation failed:', rendererError);
+      document.body.removeChild(canvas);
+      return false;
+    }
   } catch (error) {
+    console.log('THREE.js WebGL detection failed:', error);
     return false;
   }
 };
@@ -88,44 +118,11 @@ const SafeCanvas = ({ children, fallback, ...props }: any) => {
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const checkWebGL = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        
-        if (!gl) {
-          console.log('WebGL not supported - no context available');
-          setWebglSupported(false);
-          return;
-        }
-
-        // Type guard to ensure we have a WebGL context
-        if (!('getParameter' in gl) || !('createBuffer' in gl)) {
-          console.log('WebGL context does not have required methods');
-          setWebglSupported(false);
-          return;
-        }
-        
-        // Check if WebGL context is working properly
-        try {
-          const buffer = (gl as WebGLRenderingContext).createBuffer();
-          if (!buffer) {
-            console.log('WebGL buffer creation failed - showing fallback');
-            setWebglSupported(false);
-            return;
-          }
-        } catch (bufferError) {
-          console.log('WebGL buffer creation threw error:', bufferError);
-          setWebglSupported(false);
-          return;
-        }
-        
-        console.log('WebGL is supported and functional');
-        setWebglSupported(true);
-      } catch (error) {
-        console.error('WebGL detection failed:', error);
-        setWebglSupported(false);
-      }
+    const checkWebGL = async () => {
+      console.log('Starting comprehensive WebGL detection...');
+      const isSupported = await detectWebGLWithThreeJS();
+      console.log('WebGL detection result:', isSupported);
+      setWebglSupported(isSupported);
     };
 
     checkWebGL();
