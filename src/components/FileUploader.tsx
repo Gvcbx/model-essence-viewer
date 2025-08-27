@@ -22,14 +22,14 @@ export const FileUploader = ({
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) {
-      toast.error('نوع الملف غير مدعوم');
+      toast.error('Unsupported file type');
       return;
     }
 
     const file = acceptedFiles[0];
     
     if (file.size > maxSize) {
-      toast.error('حجم الملف كبير جداً');
+      toast.error('File size too large');
       return;
     }
 
@@ -42,10 +42,10 @@ export const FileUploader = ({
       
       setUploadStatus('success');
       onFileSelect(file);
-      toast.success(`تم تحميل الملف: ${file.name}`);
+      toast.success(`File uploaded: ${file.name}`);
     } catch (error) {
       setUploadStatus('error');
-      toast.error('فشل في تحميل الملف');
+      toast.error('Failed to upload file');
     }
   }, [onFileSelect, maxSize]);
 
@@ -92,7 +92,7 @@ export const FileUploader = ({
     <Card className="p-6 bg-viewer-panel border-border/50">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">تحميل ملف النموذج</h3>
+          <h3 className="text-lg font-semibold">Upload Model File</h3>
           {uploadedFile && (
             <Button
               variant="ghost"
@@ -120,16 +120,16 @@ export const FileUploader = ({
               <Upload className="h-12 w-12 text-muted-foreground" />
               <div className="text-sm">
                 {isDragActive ? (
-                  <p className="text-primary font-medium">أفلت الملف هنا...</p>
+                  <p className="text-primary font-medium">Drop file here...</p>
                 ) : (
                   <>
-                    <p className="text-foreground font-medium">اسحب ملف MEF هنا</p>
-                    <p className="text-muted-foreground">أو انقر للاختيار</p>
+                    <p className="text-foreground font-medium">Drag MEF file here</p>
+                    <p className="text-muted-foreground">or click to select</p>
                   </>
                 )}
               </div>
               <div className="text-xs text-muted-foreground">
-                الأنواع المدعومة: {acceptedTypes.join(', ')}
+                Supported types: {acceptedTypes.join(', ')}
               </div>
             </div>
           </div>
@@ -154,9 +154,9 @@ export const FileUploader = ({
         )}
 
         <div className="text-xs text-muted-foreground space-y-1">
-          <p>• يدعم ملفات MEF من لعبة IGI2 Covert Strike</p>
-          <p>• حد أقصى لحجم الملف: {Math.round(maxSize / 1024 / 1024)} MB</p>
-          <p>• صيغ أخرى مدعومة: OBJ, FBX, GLTF</p>
+          <p>• Supports MEF files from IGI2 Covert Strike</p>
+          <p>• Max file size: {Math.round(maxSize / 1024 / 1024)} MB</p>
+          <p>• Other supported formats: OBJ, FBX, GLTF</p>
         </div>
       </div>
     </Card>

@@ -20,23 +20,23 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
   const features = [
     {
       icon: Eye,
-      title: 'عرض تفاعلي ثلاثي الأبعاد',
-      description: 'استكشف النماذج بحرية مع أدوات تحكم متقدمة'
+      title: 'Interactive 3D Viewer',
+      description: 'Explore models freely with advanced controls'
     },
     {
       icon: Zap,
-      title: 'أداء عالي',
-      description: 'محرك عرض محسّن لنماذج معقدة'
+      title: 'High Performance',
+      description: 'Optimized rendering engine for complex models'
     },
     {
       icon: FileText,
-      title: 'دعم ملفات MEF',
-      description: 'يدعم ملفات IGI2 الأصلية وصيغ أخرى'
+      title: 'MEF File Support',
+      description: 'Supports original IGI2 files and other formats'
     },
     {
       icon: Download,
-      title: 'تصدير متقدم',
-      description: 'احفظ النماذج بصيغ مختلفة'
+      title: 'Advanced Export',
+      description: 'Save models in various formats'
     }
   ];
 
@@ -49,26 +49,26 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30">
-                  الإصدار 1.0.0
+                  Version 1.0.0
                 </Badge>
                 <Badge variant="outline" className="border-accent/30 text-accent">
-                  مجاني ومفتوح المصدر
+                  Free & Open Source
                 </Badge>
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                  عارض نماذج IGI2
+                  IGI2 Model Viewer
                 </span>
                 <br />
                 <span className="text-2xl lg:text-3xl text-muted-foreground">
-                  أداة احترافية لملفات MEF
+                  Professional MEF File Tool
                 </span>
               </h1>
               
               <p className="text-lg text-muted-foreground leading-relaxed">
-                استكشف وحلل النماذج الثلاثية الأبعاد من لعبة Project IGI 2: Covert Strike. 
-                أداة متقدمة مع عارض تفاعلي وإمكانيات تصدير شاملة.
+                Explore and analyze 3D models from Project IGI 2: Covert Strike game. 
+                Advanced tool with interactive viewer and comprehensive export capabilities.
               </p>
             </div>
 
@@ -105,7 +105,7 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
                 className="bg-gradient-primary hover:opacity-90 text-white shadow-glow"
               >
                 <Upload className="h-5 w-5 mr-2" />
-                ابدأ الآن
+                Get Started
                 <ArrowRight className="h-4 w-4 mr-2" />
               </Button>
               
@@ -116,7 +116,7 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
                 className="border-border/50 bg-viewer-control/30 hover:bg-viewer-control"
               >
                 <Github className="h-5 w-5 mr-2" />
-                المشروع الأصلي
+                Original Project
               </Button>
             </div>
 
@@ -124,15 +124,15 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
             <div className="flex items-center gap-6 pt-4 border-t border-border/30">
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">MEF</div>
-                <div className="text-xs text-muted-foreground">صيغة أساسية</div>
+                <div className="text-xs text-muted-foreground">Primary Format</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-accent">4+</div>
-                <div className="text-xs text-muted-foreground">صيغ مدعومة</div>
+                <div className="text-xs text-muted-foreground">Supported Formats</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-success">∞</div>
-                <div className="text-xs text-muted-foreground">حجم النماذج</div>
+                <div className="text-xs text-muted-foreground">Model Size</div>
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
               <div className="relative overflow-hidden rounded-xl bg-viewer-bg">
                 <img
                   src={heroImage}
-                  alt="عارض نماذج IGI2 - واجهة العرض الثلاثي"
+                  alt="IGI2 Model Viewer - 3D Viewer Interface"
                   className="w-full h-auto object-cover"
                 />
                 
@@ -153,15 +153,15 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
                 {/* Floating Elements */}
                 <div className="absolute top-4 right-4">
                   <Badge className="bg-success/20 text-success border-success/30 backdrop-blur-sm">
-                    متاح الآن
+                    Available Now
                   </Badge>
                 </div>
                 
                 <div className="absolute bottom-4 left-4">
                   <div className="bg-viewer-toolbar/90 backdrop-blur-sm rounded-lg p-3 border border-border/30">
-                    <p className="text-xs text-muted-foreground mb-1">مثال:</p>
+                    <p className="text-xs text-muted-foreground mb-1">Example:</p>
                     <p className="text-sm font-medium">soldier_model.mef</p>
-                    <p className="text-xs text-primary">15,420 مثلث • 8,932 رأس</p>
+                    <p className="text-xs text-primary">15,420 triangles • 8,932 vertices</p>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export const WelcomeScreen = ({ onGetStarted }: WelcomeScreenProps) => {
         {/* Bottom Info */}
         <div className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            مبني بحب للمجتمع العربي • مفتوح المصدر • مجاني للأبد
+            Built with love for the community • Open Source • Free Forever
           </p>
         </div>
       </div>

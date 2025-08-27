@@ -87,16 +87,16 @@ const WebGLFallback = () => (
   <div className="h-full flex items-center justify-center p-8">
     <Alert className="max-w-lg border-destructive/50 bg-destructive/10">
       <AlertTriangle className="h-4 w-4 text-destructive" />
-      <AlertTitle className="text-destructive">WebGL غير متاح</AlertTitle>
+      <AlertTitle className="text-destructive">WebGL Not Available</AlertTitle>
       <AlertDescription className="mt-2 space-y-2">
-        <p>هذه الأداة تتطلب دعم WebGL لعرض النماذج ثلاثية الأبعاد.</p>
+        <p>This tool requires WebGL support to display 3D models.</p>
         <div className="text-sm space-y-1 mt-4">
-          <p className="font-medium">الحلول المقترحة:</p>
+          <p className="font-medium">Suggested solutions:</p>
           <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-            <li>تأكد من أن متصفحك يدعم WebGL</li>
-            <li>فعّل تسريع الأجهزة في إعدادات المتصفح</li>
-            <li>حدّث برامج تشغيل كرت الرسومات</li>
-            <li>جرب متصفحاً آخر (Chrome, Firefox, Edge)</li>
+            <li>Make sure your browser supports WebGL</li>
+            <li>Enable hardware acceleration in browser settings</li>
+            <li>Update your graphics drivers</li>
+            <li>Try another browser (Chrome, Firefox, Edge)</li>
           </ul>
         </div>
         <Button 
@@ -106,7 +106,7 @@ const WebGLFallback = () => (
           className="mt-4"
         >
           <Monitor className="h-4 w-4 mr-2" />
-          إعادة تحميل الصفحة
+          Reload Page
         </Button>
       </AlertDescription>
     </Alert>
@@ -133,7 +133,7 @@ const SafeCanvas = ({ children, fallback, ...props }: any) => {
     return (
       <div className="h-full flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-sm text-muted-foreground">فحص دعم WebGL...</span>
+        <span className="ml-2 text-sm text-muted-foreground">Checking WebGL support...</span>
       </div>
     );
   }
@@ -190,7 +190,7 @@ export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps)
         <div className="absolute inset-0 z-20 bg-viewer-bg/80 backdrop-blur-sm flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">تحميل النموذج...</p>
+            <p className="text-sm text-muted-foreground">Loading model...</p>
           </div>
         </div>
       )}

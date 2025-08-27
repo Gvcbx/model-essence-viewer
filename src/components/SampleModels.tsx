@@ -32,8 +32,8 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
   const sampleModels: SampleModel[] = [
     {
       id: 'soldier-01',
-      name: 'جندي IGI2',
-      description: 'النموذج الأساسي للجندي في اللعبة',
+      name: 'IGI2 Soldier',
+      description: 'Basic soldier model from the game',
       category: 'character',
       triangles: 15420,
       vertices: 8932,
@@ -42,8 +42,8 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
     },
     {
       id: 'ak47-weapon',
-      name: 'بندقية AK-47',
-      description: 'نموذج سلاح AK-47 مفصل',
+      name: 'AK-47 Rifle',
+      description: 'Detailed AK-47 weapon model',
       category: 'weapon',
       triangles: 8250,
       vertices: 4650,
@@ -52,8 +52,8 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
     },
     {
       id: 'military-jeep',
-      name: 'جيب عسكري',
-      description: 'مركبة عسكرية قتالية',
+      name: 'Military Jeep',
+      description: 'Combat military vehicle',
       category: 'vehicle',
       triangles: 25680,
       vertices: 14230,
@@ -62,8 +62,8 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
     },
     {
       id: 'base-building',
-      name: 'مبنى القاعدة',
-      description: 'هيكل المباني في المهام',
+      name: 'Base Building',
+      description: 'Building structure from missions',
       category: 'environment',
       triangles: 42150,
       vertices: 28940,
@@ -74,35 +74,35 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
 
   const getCategoryInfo = (category: string) => {
     const categoryMap = {
-      character: { label: 'شخصية', icon: User, color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
-      weapon: { label: 'سلاح', icon: Zap, color: 'bg-orange-500/10 text-orange-400 border-orange-500/30' },
-      vehicle: { label: 'مركبة', icon: Shield, color: 'bg-green-500/10 text-green-400 border-green-500/30' },
-      environment: { label: 'بيئة', icon: Layers, color: 'bg-purple-500/10 text-purple-400 border-purple-500/30' }
+      character: { label: 'Character', icon: User, color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
+      weapon: { label: 'Weapon', icon: Zap, color: 'bg-orange-500/10 text-orange-400 border-orange-500/30' },
+      vehicle: { label: 'Vehicle', icon: Shield, color: 'bg-green-500/10 text-green-400 border-green-500/30' },
+      environment: { label: 'Environment', icon: Layers, color: 'bg-purple-500/10 text-purple-400 border-purple-500/30' }
     };
     return categoryMap[category as keyof typeof categoryMap] || categoryMap.character;
   };
 
   const handleModelSelect = (model: SampleModel) => {
     onModelSelect(model);
-    toast.success(`تم تحديد النموذج: ${model.name}`);
+    toast.success(`Model selected: ${model.name}`);
   };
 
   const handlePreview = (model: SampleModel) => {
-    toast(`معاينة ${model.name} قريباً...`);
+    toast(`Preview ${model.name} coming soon...`);
   };
 
   const handleDownload = (model: SampleModel, e: React.MouseEvent) => {
     e.stopPropagation();
-    toast(`تحميل ${model.name} قريباً...`);
+    toast(`Download ${model.name} coming soon...`);
   };
 
   return (
     <div className="h-full">
       <Card className="h-full bg-viewer-panel border-border/50 shadow-panel">
         <div className="p-4 border-b border-border/50">
-          <h3 className="text-lg font-semibold mb-2">نماذج IGI2 الجاهزة</h3>
+          <h3 className="text-lg font-semibold mb-2">Ready IGI2 Models</h3>
           <p className="text-sm text-muted-foreground">
-            مجموعة مختارة من نماذج اللعبة للاستكشاف والتجريب
+            Selected collection of game models for exploration and testing
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
                         className="flex-1 bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
                       >
                         <Eye className="h-3 w-3 mr-1" />
-                        عرض
+                        View
                       </Button>
                       <Button
                         variant="outline"
@@ -184,8 +184,8 @@ export const SampleModels = ({ onModelSelect }: SampleModelsProps) => {
           <Card className="p-6 bg-viewer-control/20 border-dashed border-border/30 text-center">
             <div className="text-muted-foreground">
               <Layers className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm font-medium mb-1">المزيد من النماذج قريباً</p>
-              <p className="text-xs">سنضيف المزيد من النماذج من اللعبة</p>
+              <p className="text-sm font-medium mb-1">More models coming soon</p>
+              <p className="text-xs">We'll add more models from the game</p>
             </div>
           </Card>
         </div>

@@ -65,9 +65,9 @@ export const ViewerPage = () => {
       };
 
       setModelData(sampleModelData);
-      toast.success('تم تحميل النموذج بنجاح!');
+      toast.success('Model loaded successfully!');
     } catch (error) {
-      toast.error('فشل في معالجة ملف النموذج');
+      toast.error('Failed to process model file');
     } finally {
       setIsLoading(false);
     }
@@ -117,10 +117,10 @@ export const ViewerPage = () => {
                 <Tabs defaultValue="upload" className="h-full flex flex-col">
                   <TabsList className="grid w-full grid-cols-2 bg-viewer-control/30">
                     <TabsTrigger value="upload" className="data-[state=active]:bg-primary/20">
-                      تحميل ملف
+                      Upload File
                     </TabsTrigger>
                     <TabsTrigger value="library" className="data-[state=active]:bg-primary/20">
-                      المكتبة
+                      Library
                     </TabsTrigger>
                   </TabsList>
                   
@@ -175,18 +175,18 @@ export const ViewerPage = () => {
       <div className="bg-viewer-toolbar/80 border-t border-border/50 px-4 py-2">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-4 text-muted-foreground">
-            <span>الحالة: {selectedFile ? 'نموذج محمّل' : 'لا يوجد نموذج'}</span>
+            <span>Status: {selectedFile ? 'Model loaded' : 'No model'}</span>
             {modelData && (
               <>
                 <span>•</span>
-                <span>المثلثات: {modelData.triangles.toLocaleString()}</span>
+                <span>Triangles: {modelData.triangles.toLocaleString()}</span>
                 <span>•</span>
-                <span>الرؤوس: {modelData.vertices.toLocaleString()}</span>
+                <span>Vertices: {modelData.vertices.toLocaleString()}</span>
               </>
             )}
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <span>عارض نماذج IGI2 MEF</span>
+            <span>IGI2 MEF Model Viewer</span>
           </div>
         </div>
       </div>

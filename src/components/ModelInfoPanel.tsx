@@ -46,12 +46,12 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
   };
 
   const handleExport = (format: string) => {
-    toast.success(`تصدير النموذج بصيغة ${format}...`);
+    toast.success(`Exporting model as ${format}...`);
   };
 
   // Sample data when no model is loaded
   const defaultModelInfo: ModelInfo = {
-    name: 'عينة من نماذج IGI2',
+    name: 'IGI2 Sample Models',
     format: 'MEF',
     size: 2458112,
     triangles: 15420,
@@ -72,7 +72,7 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Info className="h-5 w-5 text-primary" />
-            معلومات النموذج
+            Model Information
           </h3>
           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
             {info.format}
@@ -84,9 +84,9 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
       <div className="px-4 pt-4">
         <div className="flex gap-1 bg-viewer-control/30 p-1 rounded-lg">
           {[
-            { id: 'info', label: 'معلومات', icon: FileText },
-            { id: 'meshes', label: 'الشبكات', icon: Layers },
-            { id: 'materials', label: 'المواد', icon: Palette }
+            { id: 'info', label: 'Info', icon: FileText },
+            { id: 'meshes', label: 'Meshes', icon: Layers },
+            { id: 'materials', label: 'Materials', icon: Palette }
           ].map(tab => {
             const IconComponent = tab.icon;
             return (
@@ -110,20 +110,20 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
         {activeTab === 'info' && (
           <div className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium mb-2">معلومات الملف</h4>
+              <h4 className="text-sm font-medium mb-2">File Information</h4>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">الاسم:</span>
+                  <span className="text-sm text-muted-foreground">Name:</span>
                   <span className="text-sm font-medium">{info.name}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">الحجم:</span>
+                  <span className="text-sm text-muted-foreground">Size:</span>
                   <span className="text-sm font-medium">{formatFileSize(info.size)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    وقت التحميل:
+                    Load Time:
                   </span>
                   <span className="text-sm font-medium">{info.loadTime}ms</span>
                 </div>
@@ -133,29 +133,29 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
             <Separator className="bg-border/50" />
 
             <div>
-              <h4 className="text-sm font-medium mb-2">الهندسة</h4>
+              <h4 className="text-sm font-medium mb-2">Geometry</h4>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground flex items-center gap-1">
                     <Triangle className="h-3 w-3" />
-                    المثلثات:
+                    Triangles:
                   </span>
                   <span className="text-sm font-medium">{info.triangles.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground flex items-center gap-1">
                     <Box className="h-3 w-3" />
-                    الرؤوس:
+                    Vertices:
                   </span>
                   <span className="text-sm font-medium">{info.vertices.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">المواد:</span>
+                  <span className="text-sm text-muted-foreground">Materials:</span>
                   <span className="text-sm font-medium">{info.materials}</span>
                 </div>
                 {info.bones && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">العظام:</span>
+                    <span className="text-sm text-muted-foreground">Bones:</span>
                     <span className="text-sm font-medium">{info.bones}</span>
                   </div>
                 )}
@@ -164,11 +164,11 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
 
             {/* Quality Indicator */}
             <div>
-              <h4 className="text-sm font-medium mb-2">جودة النموذج</h4>
+              <h4 className="text-sm font-medium mb-2">Model Quality</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">التفاصيل</span>
-                  <span className="text-xs font-medium">عالية</span>
+                  <span className="text-xs text-muted-foreground">Detail Level</span>
+                  <span className="text-xs font-medium">High</span>
                 </div>
                 <Progress value={85} className="h-2" />
               </div>
@@ -178,7 +178,7 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
 
         {activeTab === 'meshes' && (
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">الشبكات ({info.meshes.length})</h4>
+            <h4 className="text-sm font-medium">Meshes ({info.meshes.length})</h4>
             {info.meshes.map((mesh, index) => (
               <div key={index} className="flex items-center justify-between p-2 bg-viewer-control/30 rounded-lg">
                 <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
                   <span className="text-sm">{mesh}</span>
                 </div>
                 <Badge variant="outline">
-                  مرئي
+                  Visible
                 </Badge>
               </div>
             ))}
@@ -195,7 +195,7 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
 
         {activeTab === 'materials' && (
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">الخامات والتكسات</h4>
+            <h4 className="text-sm font-medium">Materials & Textures</h4>
             {info.textures.map((texture, index) => (
               <div key={index} className="flex items-center justify-between p-2 bg-viewer-control/30 rounded-lg">
                 <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ export const ModelInfoPanel = ({ modelInfo, isLoading = false }: ModelInfoPanelP
 
       {/* Export Actions */}
       <div className="p-4 border-t border-border/50 space-y-2">
-        <h4 className="text-sm font-medium mb-2">تصدير النموذج</h4>
+        <h4 className="text-sm font-medium mb-2">Export Model</h4>
         <div className="grid grid-cols-2 gap-2">
           <Button
             variant="outline"

@@ -39,13 +39,13 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
     onToolChange?.(tool);
     
     const toolNames: Record<string, string> = {
-      select: 'أداة التحديد',
-      move: 'أداة التحريك',
-      rotate: 'أداة الدوران',
-      zoom: 'أداة التكبير'
+      select: 'Selection Tool',
+      move: 'Move Tool',
+      rotate: 'Rotation Tool',
+      zoom: 'Zoom Tool'
     };
     
-    toast(`تم تفعيل ${toolNames[tool] || tool}`);
+    toast(`Activated ${toolNames[tool] || tool}`);
   };
 
   const handleViewToggle = (option: string) => {
@@ -53,17 +53,17 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
       case 'grid':
         setShowGrid(!showGrid);
         onViewChange?.(option, !showGrid);
-        toast(`الشبكة ${!showGrid ? 'مفعلة' : 'معطلة'}`);
+        toast(`Grid ${!showGrid ? 'enabled' : 'disabled'}`);
         break;
       case 'stats':
         setShowStats(!showStats);
         onViewChange?.(option, !showStats);
-        toast(`إحصائيات الأداء ${!showStats ? 'مفعلة' : 'معطلة'}`);
+        toast(`Performance stats ${!showStats ? 'enabled' : 'disabled'}`);
         break;
       case 'autoRotate':
         setAutoRotate(!autoRotate);
         onViewChange?.(option, !autoRotate);
-        toast(`الدوران التلقائي ${!autoRotate ? 'مفعل' : 'معطل'}`);
+        toast(`Auto rotation ${!autoRotate ? 'enabled' : 'disabled'}`);
         break;
     }
   };
@@ -76,20 +76,20 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
     onViewChange?.('lighting', nextMode);
     
     const modeNames: Record<string, string> = {
-      studio: 'إضاءة الاستوديو',
-      sunset: 'إضاءة الغروب',
-      dawn: 'إضاءة الفجر',
-      night: 'إضاءة الليل'
+      studio: 'Studio lighting',
+      sunset: 'Sunset lighting',
+      dawn: 'Dawn lighting',
+      night: 'Night lighting'
     };
     
-    toast(`تم التغيير إلى ${modeNames[nextMode]}`);
+    toast(`Changed to ${modeNames[nextMode]}`);
   };
 
   const toolButtons = [
-    { id: 'select', icon: MousePointer, label: 'تحديد' },
-    { id: 'move', icon: Move, label: 'تحريك' },
-    { id: 'rotate', icon: RotateCcw, label: 'دوران' },
-    { id: 'zoom', icon: ZoomIn, label: 'تكبير' }
+    { id: 'select', icon: MousePointer, label: 'Select' },
+    { id: 'move', icon: Move, label: 'Move' },
+    { id: 'rotate', icon: RotateCcw, label: 'Rotate' },
+    { id: 'zoom', icon: ZoomIn, label: 'Zoom' }
   ];
 
   return (
@@ -129,7 +129,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               className={cn(
                 showGrid && "bg-primary/20 text-primary border-primary/30"
               )}
-              title="تبديل الشبكة"
+              title="Toggle Grid"
             >
               <Grid3X3 className="h-4 w-4" />
             </Button>
@@ -141,7 +141,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               className={cn(
                 showStats && "bg-primary/20 text-primary border-primary/30"
               )}
-              title="إحصائيات الأداء"
+              title="Performance Stats"
             >
               {showStats ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
             </Button>
@@ -150,7 +150,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               variant="ghost"
               size="sm"
               onClick={handleLightChange}
-              title="تغيير الإضاءة"
+              title="Change Lighting"
             >
               {lightMode === 'night' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </Button>
@@ -167,7 +167,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               className={cn(
                 autoRotate && "bg-primary/20 text-primary border-primary/30"
               )}
-              title="الدوران التلقائي"
+              title="Auto Rotate"
             >
               {autoRotate ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </Button>
@@ -176,7 +176,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               variant="ghost"
               size="sm"
               onClick={() => onViewChange?.('screenshot', true)}
-              title="لقطة شاشة"
+              title="Screenshot"
             >
               <Camera className="h-4 w-4" />
             </Button>
@@ -185,7 +185,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               variant="ghost"
               size="sm"
               onClick={() => onViewChange?.('fullscreen', true)}
-              title="ملء الشاشة"
+              title="Full Screen"
             >
               <Maximize className="h-4 w-4" />
             </Button>
@@ -197,8 +197,8 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => toast('إعدادات العارض قريباً...')}
-            title="الإعدادات"
+            onClick={() => toast('Viewer settings coming soon...')}
+            title="Settings"
           >
             <Settings className="h-4 w-4" />
           </Button>

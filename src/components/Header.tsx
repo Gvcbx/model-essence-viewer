@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export const Header = () => {
   const handleAction = (action: string) => {
-    toast(`${action} قريباً...`);
+    toast(`${action} coming soon...`);
   };
 
   return (
@@ -27,10 +27,10 @@ export const Header = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                  عارض نماذج IGI2
+                  IGI2 Model Viewer
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  أداة عرض ملفات MEF - Project IGI 2: Covert Strike
+                  MEF File Viewer - Project IGI 2: Covert Strike
                 </p>
               </div>
             </div>
@@ -45,21 +45,21 @@ export const Header = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleAction('المساعدة')}
+              onClick={() => handleAction('Help')}
               className="text-muted-foreground hover:text-foreground"
             >
               <HelpCircle className="h-4 w-4 mr-2" />
-              المساعدة
+              Help
             </Button>
 
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleAction('التوثيق')}
+              onClick={() => handleAction('Documentation')}
               className="text-muted-foreground hover:text-foreground"
             >
               <FileText className="h-4 w-4 mr-2" />
-              التوثيق
+              Docs
             </Button>
 
             <Button
@@ -69,23 +69,23 @@ export const Header = () => {
               className="text-muted-foreground hover:text-foreground"
             >
               <Github className="h-4 w-4 mr-2" />
-              المصدر
+              Source
             </Button>
 
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleAction('تحميل الأداة')}
+              onClick={() => handleAction('Download Tool')}
               className="bg-primary/10 border-primary/30 text-primary hover:bg-primary/20"
             >
               <Download className="h-4 w-4 mr-2" />
-              تحميل الأداة
+              Download Tool
             </Button>
 
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleAction('الإعدادات')}
+              onClick={() => handleAction('Settings')}
               className="text-muted-foreground hover:text-foreground"
             >
               <Settings className="h-4 w-4" />
