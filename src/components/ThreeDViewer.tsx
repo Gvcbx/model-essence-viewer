@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, RotateCcw, AlertTriangle, Monitor } from 'lucide-react';
+import { MEFModel } from '@/components/MEFModel';
 
 interface Model3DProps {
   position: [number, number, number];
@@ -39,6 +40,9 @@ const Model3D = ({ position, color, geometry }: Model3DProps) => {
 interface ThreeDViewerProps {
   modelData?: any;
   showStats?: boolean;
+  showGrid?: boolean;
+  autoRotate?: boolean;
+  wireframe?: boolean;
 }
 
 // WebGL detection utility using THREE.js WebGLRenderer
@@ -153,7 +157,13 @@ const SafeCanvas = ({ children, fallback, ...props }: any) => {
   );
 };
 
-export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps) => {
+export const ThreeDViewer = ({ 
+  modelData, 
+  showStats = true, 
+  showGrid = true, 
+  autoRotate = false, 
+  wireframe = false 
+}: ThreeDViewerProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const controlsRef = useRef<any>();
 
@@ -236,15 +246,24 @@ export const ThreeDViewer = ({ modelData, showStats = true }: ThreeDViewerProps)
             fadeStrength={1}
           />
 
-          {/* Sample Models - Replace with actual MEF model loader */}
-          {sampleModels.map((model, index) => (
-            <Model3D
-              key={index}
-              position={model.position}
-              color={model.color}
-              geometry={model.geometry}
+          {/* Sample Models or MEF Model */}
+          {modelData && modelData.meshes ? (
+            <MEFModel 
+              meshes={modelData.meshes}
+              wireframe={wireframe}
+              autoRotate={autoRotate}
+              color="#00ff88"
             />
-          ))}
+          ) : (
+            sampleModels.map((model, index) => (
+              <Model3D
+                key={index}
+                position={model.position}
+                color={model.color}
+                geometry={model.geometry}
+              />
+            ))
+          )}
 
           {/* Performance Stats */}
           {showStats && <Stats />}

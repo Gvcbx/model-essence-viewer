@@ -27,45 +27,68 @@ interface ModelData {
 export const ViewerPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [modelData, setModelData] = useState<ModelData | null>(null);
+  const [loadedMEFData, setLoadedMEFData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [viewerSettings, setViewerSettings] = useState({
     showGrid: true,
     showStats: true,
     autoRotate: false,
-    lighting: 'studio'
+    lighting: 'studio',
+    wireframe: false
   });
 
   // Handle file selection and processing
-  const handleFileSelect = async (file: File) => {
+  const handleFileSelect = async (file: File, parsedMEFData?: any) => {
+    const startTime = Date.now();
     setSelectedFile(file);
     setIsLoading(true);
     setShowWelcome(false);
 
     try {
-      // Simulate model processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (parsedMEFData) {
+        // Real MEF file with parsed data
+        const sampleModelData: ModelData = {
+          name: file.name,
+          format: parsedMEFData.meshes.length > 1 ? 'MEF (Multi-mesh)' : 'MEF',
+          size: file.size,
+          triangles: parsedMEFData.totalTriangles,
+          vertices: parsedMEFData.totalVertices,
+          materials: parsedMEFData.meshes.length,
+          bones: 0,
+          textures: [],
+          meshes: parsedMEFData.meshes.map((mesh: any, i: number) => `${mesh.name || `Mesh_${i + 1}`}`),
+          loadTime: Date.now() - startTime
+        };
+        
+        setModelData(sampleModelData);
+        setLoadedMEFData(parsedMEFData);
+        toast.success(`MEF model loaded: ${parsedMEFData.meshes.length} meshes`);
+      } else {
+        // Simulate processing for other formats
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Generate sample model data based on file
-      const sampleModelData: ModelData = {
-        name: file.name,
-        format: file.name.split('.').pop()?.toUpperCase() || 'MEF',
-        size: file.size,
-        triangles: Math.floor(Math.random() * 50000) + 5000,
-        vertices: Math.floor(Math.random() * 30000) + 3000,
-        materials: Math.floor(Math.random() * 10) + 1,
-        bones: Math.floor(Math.random() * 30) + 5,
-        textures: [
-          `${file.name}_diffuse.dds`,
-          `${file.name}_normal.dds`,
-          `${file.name}_specular.dds`
-        ],
-        meshes: ['Mesh_01', 'Mesh_02', 'Mesh_03', 'Bones', 'Equipment'],
-        loadTime: Math.floor(Math.random() * 500) + 100
-      };
+        const sampleModelData: ModelData = {
+          name: file.name,
+          format: file.name.split('.').pop()?.toUpperCase() || 'MEF',
+          size: file.size,
+          triangles: Math.floor(Math.random() * 50000) + 5000,
+          vertices: Math.floor(Math.random() * 30000) + 3000,
+          materials: Math.floor(Math.random() * 10) + 1,
+          bones: Math.floor(Math.random() * 30) + 5,
+          textures: [
+            `${file.name}_diffuse.dds`,
+            `${file.name}_normal.dds`,
+            `${file.name}_specular.dds`
+          ],
+          meshes: ['Mesh_01', 'Mesh_02', 'Mesh_03', 'Bones', 'Equipment'],
+          loadTime: Math.floor(Math.random() * 500) + 100
+        };
 
-      setModelData(sampleModelData);
-      toast.success('Model loaded successfully!');
+        setModelData(sampleModelData);
+        setLoadedMEFData(null);
+        toast.success('Model loaded successfully!');
+      }
     } catch (error) {
       toast.error('Failed to process model file');
     } finally {
@@ -148,8 +171,11 @@ export const ViewerPage = () => {
             <ResizablePanel defaultSize={50} minSize={40}>
               <div className="h-full px-2">
                 <ThreeDViewer
-                  modelData={modelData}
+                  modelData={loadedMEFData}
                   showStats={viewerSettings.showStats}
+                  showGrid={viewerSettings.showGrid}
+                  autoRotate={viewerSettings.autoRotate}
+                  wireframe={viewerSettings.wireframe}
                 />
               </div>
             </ResizablePanel>

@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Upload, File, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { parseMEFFile } from '@/utils/mefParser';
 
 interface FileUploaderProps {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File, modelData?: any) => void;
   acceptedTypes?: string[];
   maxSize?: number;
 }
@@ -37,15 +38,24 @@ export const FileUploader = ({
     setUploadStatus('uploading');
 
     try {
-      // Simulate file processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      let modelData = null;
+      
+      // Parse MEF files
+      if (file.name.toLowerCase().endsWith('.mef')) {
+        modelData = await parseMEFFile(file);
+        toast.success(`MEF file parsed: ${modelData.meshes.length} meshes, ${modelData.totalVertices} vertices`);
+      } else {
+        // Simulate processing for other formats
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        toast.success(`File uploaded: ${file.name}`);
+      }
       
       setUploadStatus('success');
-      onFileSelect(file);
-      toast.success(`File uploaded: ${file.name}`);
+      onFileSelect(file, modelData);
     } catch (error) {
       setUploadStatus('error');
-      toast.error('Failed to upload file');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to upload file';
+      toast.error(errorMessage);
     }
   }, [onFileSelect, maxSize]);
 

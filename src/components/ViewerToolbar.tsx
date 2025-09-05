@@ -16,7 +16,8 @@ import {
   Maximize,
   Camera,
   Play,
-  Pause
+  Pause,
+  Square
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -32,6 +33,7 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
   const [showGrid, setShowGrid] = useState(true);
   const [showStats, setShowStats] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
+  const [wireframe, setWireframe] = useState(false);
   const [lightMode, setLightMode] = useState('studio');
 
   const handleToolClick = (tool: string) => {
@@ -64,6 +66,11 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
         setAutoRotate(!autoRotate);
         onViewChange?.(option, !autoRotate);
         toast(`Auto rotation ${!autoRotate ? 'enabled' : 'disabled'}`);
+        break;
+      case 'wireframe':
+        setWireframe(!wireframe);
+        onViewChange?.(option, !wireframe);
+        toast(`Wireframe mode ${!wireframe ? 'enabled' : 'disabled'}`);
         break;
     }
   };
@@ -153,6 +160,18 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
               title="Change Lighting"
             >
               {lightMode === 'night' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleViewToggle('wireframe')}
+              className={cn(
+                wireframe && "bg-primary/20 text-primary border-primary/30"
+              )}
+              title="Wireframe Mode"
+            >
+              <Square className="h-4 w-4" />
             </Button>
           </div>
 
