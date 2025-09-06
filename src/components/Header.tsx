@@ -9,8 +9,45 @@ import {
   FileText
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useState, useEffect } from 'react';
 
 export const Header = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstallable(false);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        toast('تم تنزيل الأداة بنجاح! يمكنك الآن استخدامها من سطح المكتب');
+        setIsInstallable(false);
+      }
+      setDeferredPrompt(null);
+    } else {
+      toast('الأداة متاحة للتنزيل من خلال متصفحك. اضغط على رمز التنزيل في شريط العناوين');
+    }
+  };
+
   const handleAction = (action: string) => {
     toast(`${action} coming soon...`);
   };
@@ -75,11 +112,15 @@ export const Header = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleAction('Download Tool')}
-              className="bg-primary/10 border-primary/30 text-primary hover:bg-primary/20"
+              onClick={handleInstallApp}
+              className={`${
+                isInstallable 
+                  ? 'bg-primary/10 border-primary/30 text-primary hover:bg-primary/20' 
+                  : 'bg-green-500/10 border-green-500/30 text-green-500 hover:bg-green-500/20'
+              }`}
             >
               <Download className="h-4 w-4 mr-2" />
-              Download Tool
+              {isInstallable ? 'تنزيل الأداة' : 'مُثبت'}
             </Button>
 
             <Button
