@@ -32,7 +32,7 @@ export const Header = () => {
       console.log('App was installed');
       setIsInstalled(true);
       setIsInstallable(false);
-      toast.success('تم تثبيت الأداة بنجاح! يمكنك الآن الوصول إليها من سطح المكتب');
+      toast.success('App installed successfully! You can now access it from your desktop');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -66,15 +66,15 @@ export const Header = () => {
         console.log('User choice:', outcome);
         
         if (outcome === 'accepted') {
-          toast.success('جاري تثبيت الأداة...');
+          toast.success('Installing application...');
           setIsInstallable(false);
         } else {
-          toast.info('تم إلغاء التثبيت');
+          toast.info('Installation cancelled');
         }
         setDeferredPrompt(null);
       } catch (error) {
         console.error('Installation failed:', error);
-        toast.error('فشل في تثبيت الأداة. جرب من خلال قائمة المتصفح');
+        toast.error('Installation failed. Try using browser menu');
       }
     } else {
       // Fallback instructions for manual installation
@@ -83,11 +83,11 @@ export const Header = () => {
       const isChrome = /Chrome/.test(navigator.userAgent);
       
       if (isIOS) {
-        toast.info('لتثبيت الأداة على iOS: اضغط على زر المشاركة ثم "إضافة إلى الشاشة الرئيسية"');
+        toast.info('To install on iOS: Tap Share button then "Add to Home Screen"');
       } else if (isAndroid || isChrome) {
-        toast.info('لتثبيت الأداة: اضغط على القائمة (⋮) في المتصفح واختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"');
+        toast.info('To install: Tap browser menu (⋮) and select "Install app" or "Add to Home Screen"');
       } else {
-        toast.info('الأداة متاحة للتثبيت من خلال قائمة المتصفح');
+        toast.info('App can be installed from browser menu');
       }
     }
   };
@@ -167,7 +167,7 @@ export const Header = () => {
               disabled={isInstalled}
             >
               <Download className="h-4 w-4 mr-2" />
-              {isInstalled ? 'مُثبت ✓' : isInstallable ? 'تثبيت الأداة' : 'تثبيت الأداة'}
+              {isInstalled ? 'Installed ✓' : isInstallable ? 'Install App' : 'Install App'}
             </Button>
 
             <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
@@ -184,42 +184,95 @@ export const Header = () => {
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <Settings className="h-5 w-5" />
-                    إعدادات التطبيق
+                    Application Settings
                   </DialogTitle>
                 </DialogHeader>
                 <div className="space-y-6 py-4">
                   <div className="space-y-4">
-                    <h3 className="font-semibold text-sm">معلومات التثبيت</h3>
+                    <h3 className="font-semibold text-sm">Viewer Settings</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center gap-2">
+                          <Box className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Auto-rotate models</span>
+                        </div>
+                        <input type="checkbox" className="rounded" defaultChecked />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center gap-2">
+                          <Monitor className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Show wireframe</span>
+                        </div>
+                        <input type="checkbox" className="rounded" />
+                      </div>
+
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center gap-2">
+                          <Settings className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Show grid</span>
+                        </div>
+                        <input type="checkbox" className="rounded" defaultChecked />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-sm">Performance</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Render quality</span>
+                        </div>
+                        <select className="bg-background border border-border rounded px-2 py-1 text-sm">
+                          <option>High</option>
+                          <option>Medium</option>
+                          <option>Low</option>
+                        </select>
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Anti-aliasing</span>
+                        </div>
+                        <input type="checkbox" className="rounded" defaultChecked />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-sm">Installation Status</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                         <div className="flex items-center gap-2">
                           <Monitor className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">حالة التثبيت على سطح المكتب</span>
+                          <span className="text-sm">Desktop Installation</span>
                         </div>
                         <Badge variant={isInstalled ? "default" : "secondary"}>
-                          {isInstalled ? "مُثبت" : "غير مُثبت"}
+                          {isInstalled ? "Installed" : "Not Installed"}
                         </Badge>
                       </div>
                       
                       <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                         <div className="flex items-center gap-2">
                           <Smartphone className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">دعم PWA</span>
+                          <span className="text-sm">PWA Support</span>
                         </div>
                         <Badge variant={isInstallable || isInstalled ? "default" : "secondary"}>
-                          {isInstallable || isInstalled ? "مدعوم" : "غير مدعوم"}
+                          {isInstallable || isInstalled ? "Supported" : "Not Supported"}
                         </Badge>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <h3 className="font-semibold text-sm">معلومات التطبيق</h3>
+                    <h3 className="font-semibold text-sm">About</h3>
                     <div className="text-sm text-muted-foreground space-y-2">
-                      <p>• عارض ملفات MEF من لعبة IGI2</p>
-                      <p>• يدعم عرض النماذج ثلاثية الأبعاد</p>
-                      <p>• يمكن تثبيته كتطبيق سطح مكتب</p>
-                      <p>• يعمل بدون اتصال إنترنت بعد التثبيت</p>
+                      <p>• MEF file viewer for IGI2: Covert Strike</p>
+                      <p>• Supports 3D model visualization</p>
+                      <p>• Works offline after installation</p>
+                      <p>• Enhanced parsing with auto-stride detection</p>
+                      <p>• Professional desktop-grade tool</p>
                     </div>
                   </div>
                 </div>
