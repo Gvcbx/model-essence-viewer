@@ -1,0 +1,32 @@
+{
+  "appId": "com.igi2tools.mef-viewer",
+  "productName": "IGI2 MEF Viewer",
+  "directories": {
+    "output": "electron-dist"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*"
+  ],
+  "win": {
+    "target": "nsis",
+    "icon": "public/icon-512.png",
+    "artifactName": "IGI2-MEF-Viewer-Setup-${version}.${ext}"
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "public/icon-512.png",
+    "artifactName": "IGI2-MEF-Viewer-${version}.${ext}"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "public/icon-512.png",
+    "artifactName": "IGI2-MEF-Viewer-${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build:electron": "node build.js",
+    "electron": "electron dist/electron/main.js",
+    "dist": "npm run build && npm run build:electron",
+    "package:win": "electron-builder --win",
+    "package:mac": "electron-builder --mac", 
+    "package:linux": "electron-builder --linux",
+    "package:all": "electron-builder --win --mac --linux"
+  }
+}

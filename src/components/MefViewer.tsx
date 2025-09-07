@@ -72,7 +72,7 @@ const MefViewer: React.FC = () => {
       modelRef.current = mesh;
       sceneRef.current.add(mesh);
     } catch (err: any) {
-      alert("فشل التحليل: " + (err?.message || err));
+      alert("Parse failed: " + (err?.message || err));
       console.error(err);
     }
   };

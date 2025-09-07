@@ -6,6 +6,7 @@ import { SampleModels } from '@/components/SampleModels';
 import { ModelInfoPanel } from '@/components/ModelInfoPanel';
 import { ViewerToolbar } from '@/components/ViewerToolbar';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
+import { OBJConverter } from '@/components/OBJConverter';
 import { Card } from '@/components/ui/card';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -138,9 +139,12 @@ export const ViewerPage = () => {
             <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
               <div className="h-full pr-2">
                 <Tabs defaultValue="upload" className="h-full flex flex-col">
-                  <TabsList className="grid w-full grid-cols-2 bg-viewer-control/30">
+                  <TabsList className="grid w-full grid-cols-3 bg-viewer-control/30">
                     <TabsTrigger value="upload" className="data-[state=active]:bg-primary/20">
                       Upload File
+                    </TabsTrigger>
+                    <TabsTrigger value="convert" className="data-[state=active]:bg-primary/20">
+                      Convert OBJ
                     </TabsTrigger>
                     <TabsTrigger value="library" className="data-[state=active]:bg-primary/20">
                       Library
@@ -150,6 +154,10 @@ export const ViewerPage = () => {
                   <div className="flex-1 mt-4 min-h-0">
                     <TabsContent value="upload" className="h-full m-0">
                       <FileUploader onFileSelect={handleFileSelect} />
+                    </TabsContent>
+                    
+                    <TabsContent value="convert" className="h-full m-0">
+                      <OBJConverter />
                     </TabsContent>
                     
                     <TabsContent value="library" className="h-full m-0">
