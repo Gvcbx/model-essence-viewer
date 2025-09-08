@@ -7,6 +7,8 @@ import { ModelInfoPanel } from '@/components/ModelInfoPanel';
 import { ViewerToolbar } from '@/components/ViewerToolbar';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { OBJConverter } from '@/components/OBJConverter';
+import { RESManager } from '@/components/RESManager';
+import { DesktopFeatures } from '@/components/DesktopFeatures';
 import { Card } from '@/components/ui/card';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -139,15 +141,21 @@ export const ViewerPage = () => {
             <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
               <div className="h-full pr-2">
                 <Tabs defaultValue="upload" className="h-full flex flex-col">
-                  <TabsList className="grid w-full grid-cols-3 bg-viewer-control/30">
+                  <TabsList className="grid w-full grid-cols-5 bg-viewer-control/30 text-xs">
                     <TabsTrigger value="upload" className="data-[state=active]:bg-primary/20">
-                      Upload File
+                      Upload
                     </TabsTrigger>
                     <TabsTrigger value="convert" className="data-[state=active]:bg-primary/20">
-                      Convert OBJ
+                      Convert
+                    </TabsTrigger>
+                    <TabsTrigger value="res" className="data-[state=active]:bg-primary/20">
+                      RES
                     </TabsTrigger>
                     <TabsTrigger value="library" className="data-[state=active]:bg-primary/20">
                       Library
+                    </TabsTrigger>
+                    <TabsTrigger value="desktop" className="data-[state=active]:bg-primary/20">
+                      Desktop
                     </TabsTrigger>
                   </TabsList>
                   
@@ -160,6 +168,18 @@ export const ViewerPage = () => {
                       <OBJConverter />
                     </TabsContent>
                     
+                    <TabsContent value="res" className="h-full m-0">
+                      <RESManager onMEFFilesLoaded={(files) => {
+                        // Handle multiple MEF files from RES
+                        if (files.length > 0) {
+                          const firstFile = files[0];
+                          const mockFile = new File([firstFile.data], firstFile.name, { type: 'application/octet-stream' });
+                          handleFileSelect(mockFile);
+                          toast.success(`Loaded ${firstFile.name} from RES archive`);
+                        }
+                      }} />
+                    </TabsContent>
+                    
                     <TabsContent value="library" className="h-full m-0">
                       <SampleModels onModelSelect={(model) => {
                         // Handle sample model selection
@@ -167,6 +187,10 @@ export const ViewerPage = () => {
                         Object.defineProperty(mockFile, 'size', { value: parseInt(model.size) * 1024 * 1024 });
                         handleFileSelect(mockFile);
                       }} />
+                    </TabsContent>
+                    
+                    <TabsContent value="desktop" className="h-full m-0">
+                      <DesktopFeatures />
                     </TabsContent>
                   </div>
                 </Tabs>

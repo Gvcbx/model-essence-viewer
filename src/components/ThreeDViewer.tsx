@@ -45,38 +45,75 @@ interface ThreeDViewerProps {
   wireframe?: boolean;
 }
 
-// WebGL detection utility using THREE.js WebGLRenderer
+// Enhanced WebGL detection with fallback options
 const detectWebGLWithThreeJS = async (): Promise<boolean> => {
   try {
-    // Dynamic import to avoid importing THREE.js when not needed
+    // Check basic WebGL support first
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      console.log('WebGL context not available');
+      return false;
+    }
+
+    // Test THREE.js WebGLRenderer
     const THREE = await import('three');
     
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
+    canvas.width = 2;
+    canvas.height = 2;
     canvas.style.display = 'none';
     document.body.appendChild(canvas);
     
     try {
-      // Try to create a WebGLRenderer with the same settings as react-three-fiber
-      const renderer = new THREE.WebGLRenderer({
-        canvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: 'default'
-      });
+      // Try multiple renderer configurations
+      let renderer;
+      const configs = [
+        { alpha: true, antialias: true, powerPreference: 'default' as const },
+        { alpha: false, antialias: false, powerPreference: 'high-performance' as const },
+        { alpha: false, antialias: false, powerPreference: 'low-power' as const }
+      ];
+
+      for (const config of configs) {
+        try {
+          renderer = new THREE.WebGLRenderer({ canvas, ...config });
+          break;
+        } catch (e) {
+          console.log('Failed config:', config, e);
+        }
+      }
+
+      if (!renderer) {
+        throw new Error('All renderer configurations failed');
+      }
       
-      // Test if renderer is functional
-      renderer.setSize(1, 1);
-      renderer.render(new THREE.Scene(), new THREE.PerspectiveCamera());
+      // Test basic rendering
+      renderer.setSize(2, 2);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      
+      // Add a simple test geometry
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+      
+      renderer.render(scene, camera);
+      
+      // Check for WebGL errors
+      const error = renderer.getContext().getError();
+      if (error !== renderer.getContext().NO_ERROR) {
+        throw new Error(`WebGL error: ${error}`);
+      }
       
       // Clean up
       renderer.dispose();
+      geometry.dispose();
+      material.dispose();
       document.body.removeChild(canvas);
       
       return true;
     } catch (rendererError) {
-      console.log('THREE.js WebGLRenderer creation failed:', rendererError);
+      console.log('THREE.js WebGLRenderer test failed:', rendererError);
       document.body.removeChild(canvas);
       return false;
     }
@@ -86,32 +123,41 @@ const detectWebGLWithThreeJS = async (): Promise<boolean> => {
   }
 };
 
-// WebGL Fallback Component
+// WebGL Fallback Component - Arabic Support
 const WebGLFallback = () => (
   <div className="h-full flex items-center justify-center p-8">
     <Alert className="max-w-lg border-destructive/50 bg-destructive/10">
       <AlertTriangle className="h-4 w-4 text-destructive" />
-      <AlertTitle className="text-destructive">WebGL Not Available</AlertTitle>
-      <AlertDescription className="mt-2 space-y-2">
-        <p>This tool requires WebGL support to display 3D models.</p>
+      <AlertTitle className="text-destructive">WebGL غير متاح</AlertTitle>
+      <AlertDescription className="mt-2 space-y-2" dir="rtl">
+        <p>يتطلب عارض النماذج ثلاثية الأبعاد دعم WebGL لعرض النماذج.</p>
         <div className="text-sm space-y-1 mt-4">
-          <p className="font-medium">Suggested solutions:</p>
-          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-            <li>Make sure your browser supports WebGL</li>
-            <li>Enable hardware acceleration in browser settings</li>
-            <li>Update your graphics drivers</li>
-            <li>Try another browser (Chrome, Firefox, Edge)</li>
+          <p className="font-medium">الحلول المقترحة:</p>
+          <ul className="list-disc list-inside space-y-1 text-muted-foreground text-right">
+            <li>تأكد من أن متصفحك يدعم WebGL</li>
+            <li>فعّل تسريع الأجهزة في إعدادات المتصفح</li>
+            <li>حدّث تعريفات كرت الرسوميات</li>
+            <li>جرب متصفح آخر (Chrome, Firefox, Edge)</li>
+            <li>استخدم النسخة المكتبية للحصول على أفضل أداء</li>
           </ul>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => window.location.reload()} 
-          className="mt-4"
-        >
-          <Monitor className="h-4 w-4 mr-2" />
-          Reload Page
-        </Button>
+        <div className="flex gap-2 mt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => window.location.reload()} 
+          >
+            <Monitor className="h-4 w-4 mr-2" />
+            إعادة تحميل الصفحة
+          </Button>
+          <Button 
+            variant="default" 
+            size="sm" 
+            onClick={() => console.log('Download desktop app')} 
+          >
+            تحميل النسخة المكتبية
+          </Button>
+        </div>
       </AlertDescription>
     </Alert>
   </div>

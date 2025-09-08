@@ -1,11 +1,17 @@
 {
   "scripts": {
-    "build:electron": "node build.js",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "build:desktop": "node scripts/build-desktop.js",
+    "build:all": "node scripts/build-desktop.js --all",
+    "build:win": "node scripts/build-desktop.js --win", 
+    "build:mac": "node scripts/build-desktop.js --mac",
+    "build:linux": "node scripts/build-desktop.js --linux",
     "electron": "electron dist/electron/main.js",
-    "dist": "npm run build && npm run build:electron",
-    "package:win": "electron-builder --win",
-    "package:mac": "electron-builder --mac", 
-    "package:linux": "electron-builder --linux",
-    "package:all": "electron-builder --win --mac --linux"
-  }
+    "package": "npm run build && npm run build:desktop",
+    "release": "node scripts/create-release.js",
+    "start:electron": "electron ."
+  },
 }
