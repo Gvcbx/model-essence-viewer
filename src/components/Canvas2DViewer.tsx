@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { Card } from '@/components/ui/card';
+import { MEFParser } from '@/utils/mefParser';
 
 interface Canvas2DViewerProps {
   modelData?: any;
@@ -79,26 +80,62 @@ export const Canvas2DViewer = forwardRef<Canvas2DViewerRef, Canvas2DViewerProps>
           
           ctx.fillStyle = wireframe ? 'transparent' : color;
           ctx.strokeStyle = color;
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 1;
 
-          // Simple mesh representation
-          const size = 40 * zoom;
-          const offsetY = index * 20 * zoom;
-          
-          if (wireframe) {
-            ctx.strokeRect(
-              centerX - size/2 + Math.sin(rotation.y) * 10,
-              centerY - size/2 + offsetY + Math.sin(rotation.x) * 5,
-              size,
-              size
-            );
+          // Draw mesh triangles if available
+          if (mesh.vertices && mesh.indices) {
+            const vertices = mesh.vertices;
+            const indices = mesh.indices;
+            
+            ctx.beginPath();
+            
+            // Simple projection - just take X and Y coordinates
+            for (let i = 0; i < indices.length; i += 3) {
+              const i1 = indices[i] * 3;
+              const i2 = indices[i + 1] * 3;
+              const i3 = indices[i + 2] * 3;
+              
+              if (i1 < vertices.length && i2 < vertices.length && i3 < vertices.length) {
+                const x1 = centerX + vertices[i1] * zoom * 50 + Math.sin(rotation.y) * 10;
+                const y1 = centerY + vertices[i1 + 1] * zoom * 50 + Math.sin(rotation.x) * 5;
+                const x2 = centerX + vertices[i2] * zoom * 50 + Math.sin(rotation.y) * 10;
+                const y2 = centerY + vertices[i2 + 1] * zoom * 50 + Math.sin(rotation.x) * 5;
+                const x3 = centerX + vertices[i3] * zoom * 50 + Math.sin(rotation.y) * 10;
+                const y3 = centerY + vertices[i3 + 1] * zoom * 50 + Math.sin(rotation.x) * 5;
+                
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineTo(x3, y3);
+                ctx.closePath();
+              }
+            }
+            
+            if (wireframe) {
+              ctx.stroke();
+            } else {
+              ctx.fill();
+              ctx.stroke();
+            }
           } else {
-            ctx.fillRect(
-              centerX - size/2 + Math.sin(rotation.y) * 10,
-              centerY - size/2 + offsetY + Math.sin(rotation.x) * 5,
-              size,
-              size
-            );
+            // Fallback: simple mesh representation
+            const size = 40 * zoom;
+            const offsetY = index * 20 * zoom;
+            
+            if (wireframe) {
+              ctx.strokeRect(
+                centerX - size/2 + Math.sin(rotation.y) * 10,
+                centerY - size/2 + offsetY + Math.sin(rotation.x) * 5,
+                size,
+                size
+              );
+            } else {
+              ctx.fillRect(
+                centerX - size/2 + Math.sin(rotation.y) * 10,
+                centerY - size/2 + offsetY + Math.sin(rotation.x) * 5,
+                size,
+                size
+              );
+            }
           }
 
           // Mesh name
@@ -106,8 +143,8 @@ export const Canvas2DViewer = forwardRef<Canvas2DViewerRef, Canvas2DViewerProps>
           ctx.font = '12px monospace';
           ctx.fillText(
             mesh.name || `Mesh ${index + 1}`,
-            centerX - size/2 + 5,
-            centerY - size/2 + offsetY - 5
+            centerX - 60,
+            centerY - 80 + index * 15
           );
         });
       } else {

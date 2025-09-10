@@ -108,11 +108,16 @@ export const ViewerPage = () => {
     console.log('Tool changed:', tool);
   };
 
-  const handleViewChange = (option: string, value: any) => {
-    setViewerSettings(prev => ({
-      ...prev,
-      [option]: value
-    }));
+  const handleMEFFilesLoaded = (files: any[]) => {
+    console.log('MEF files loaded from RES:', files);
+    if (files.length > 0) {
+      const firstFile = files[0];
+      // Create a File-like object with the MEF data
+      const mockFile = new File([firstFile.data], firstFile.name, { type: 'application/octet-stream' });
+      // Pass the raw ArrayBuffer data directly for MEF parsing
+      handleFileSelect(mockFile, firstFile.data);
+      toast.success(`Loaded ${firstFile.name} from RES archive (${files.length} files total)`);
+    }
   };
 
   return (
@@ -126,17 +131,9 @@ export const ViewerPage = () => {
           <WelcomeScreen onGetStarted={handleGetStarted} />
         ) : (
           <>
-            {/* Toolbar */}
-            <div className="p-4 pb-2">
-              <ViewerToolbar
-                onToolChange={handleToolChange}
-                onViewChange={handleViewChange}
-              />
-            </div>
-
-        {/* Viewer Layout */}
-        <div className="flex-1 p-4 pt-2">
-          <ResizablePanelGroup direction="horizontal" className="h-full">
+            {/* Viewer Layout */}
+            <div className="flex-1 p-4">
+              <ResizablePanelGroup direction="horizontal" className="h-full">
             {/* Left Sidebar - File Upload & Controls */}
             <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
               <div className="h-full pr-2">
@@ -168,17 +165,7 @@ export const ViewerPage = () => {
                       <OBJConverter />
                     </TabsContent>
                     
-                    <TabsContent value="res" className="h-full m-0">
-                      <RESManager onMEFFilesLoaded={(files) => {
-                        // Handle multiple MEF files from RES
-                        if (files.length > 0) {
-                          const firstFile = files[0];
-                          const mockFile = new File([firstFile.data], firstFile.name, { type: 'application/octet-stream' });
-                          handleFileSelect(mockFile);
-                          toast.success(`Loaded ${firstFile.name} from RES archive`);
-                        }
-                      }} />
-                    </TabsContent>
+                       <RESManager onMEFFilesLoaded={handleMEFFilesLoaded} />
                     
                     <TabsContent value="library" className="h-full m-0">
                       <SampleModels onModelSelect={(model) => {
@@ -224,7 +211,7 @@ export const ViewerPage = () => {
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
-        </div>
+            </div>
           </>
         )}
       </div>

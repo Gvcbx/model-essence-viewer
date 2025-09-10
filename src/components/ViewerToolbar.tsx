@@ -26,9 +26,11 @@ import { cn } from '@/lib/utils';
 interface ViewerToolbarProps {
   onToolChange?: (tool: string) => void;
   onViewChange?: (option: string, value: any) => void;
+  onReset?: () => void;
+  onZoom?: (direction: 'in' | 'out') => void;
 }
 
-export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps) => {
+export const ViewerToolbar = ({ onToolChange, onViewChange, onReset, onZoom }: ViewerToolbarProps) => {
   const [activeTool, setActiveTool] = useState('select');
   const [showGrid, setShowGrid] = useState(true);
   const [showStats, setShowStats] = useState(true);
@@ -92,11 +94,22 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
     toast(`Changed to ${modeNames[nextMode]}`);
   };
 
+  const handleReset = () => {
+    onReset?.();
+    toast('View reset to default');
+  };
+
+  const handleZoom = (direction: 'in' | 'out') => {
+    onZoom?.(direction);
+    toast(`Zoomed ${direction}`);
+  };
+
   const toolButtons = [
-    { id: 'select', icon: MousePointer, label: 'Select' },
-    { id: 'move', icon: Move, label: 'Move' },
-    { id: 'rotate', icon: RotateCcw, label: 'Rotate' },
-    { id: 'zoom', icon: ZoomIn, label: 'Zoom' }
+    { id: 'select', icon: MousePointer, label: 'Select', action: () => handleToolClick('select') },
+    { id: 'move', icon: Move, label: 'Move', action: () => handleToolClick('move') },
+    { id: 'rotate', icon: RotateCcw, label: 'Rotate', action: handleReset },
+    { id: 'zoom-in', icon: ZoomIn, label: 'Zoom In', action: () => handleZoom('in') },
+    { id: 'zoom-out', icon: ZoomOut, label: 'Zoom Out', action: () => handleZoom('out') }
   ];
 
   return (
@@ -107,15 +120,17 @@ export const ViewerToolbar = ({ onToolChange, onViewChange }: ViewerToolbarProps
           <div className="flex items-center gap-1">
             {toolButtons.map((tool) => {
               const IconComponent = tool.icon;
+              const isActive = (tool.id === 'select' && activeTool === 'select') || 
+                              (tool.id === 'move' && activeTool === 'move');
               return (
                 <Button
                   key={tool.id}
-                  variant={activeTool === tool.id ? 'secondary' : 'ghost'}
+                  variant={isActive ? 'secondary' : 'ghost'}
                   size="sm"
-                  onClick={() => handleToolClick(tool.id)}
+                  onClick={tool.action}
                   className={cn(
                     "relative",
-                    activeTool === tool.id && "bg-primary/20 text-primary border-primary/30"
+                    isActive && "bg-primary/20 text-primary border-primary/30"
                   )}
                   title={tool.label}
                 >

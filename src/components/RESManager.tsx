@@ -128,8 +128,8 @@ export const RESManager = ({ onMEFFilesLoaded }: RESManagerProps) => {
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader>
+    <Card className="h-full flex flex-col">
+      <CardHeader className="flex-shrink-0">
         <CardTitle className="flex items-center gap-2">
           <FileArchive className="w-5 h-5" />
           RES Archive Manager
@@ -139,15 +139,15 @@ export const RESManager = ({ onMEFFilesLoaded }: RESManagerProps) => {
         </CardDescription>
       </CardHeader>
       
-      <CardContent className="p-6 h-full flex flex-col">
+      <CardContent className="flex-1 p-6 min-h-0 flex flex-col">
         <Tabs defaultValue="extract" className="h-full flex flex-col">
           <TabsList className="grid w-full grid-cols-2 flex-shrink-0">
             <TabsTrigger value="extract">Extract RES</TabsTrigger>
             <TabsTrigger value="create">Create RES</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="extract" className="mt-4 flex-1 flex flex-col overflow-hidden">
-            <div className="space-y-4 flex-1 flex flex-col overflow-hidden">
+          <TabsContent value="extract" className="mt-4 flex-1 min-h-0 flex flex-col">
+            <div className="space-y-4 flex-1 flex flex-col min-h-0">
               <div className="space-y-2 flex-shrink-0">
                 <Label htmlFor="res-upload">Upload RES Archive</Label>
                 <Input
@@ -167,9 +167,9 @@ export const RESManager = ({ onMEFFilesLoaded }: RESManagerProps) => {
               )}
 
               {resFiles.length > 0 && (
-                <div className="space-y-2 flex-1 flex flex-col overflow-hidden">
+                <div className="space-y-2 flex-1 flex flex-col min-h-0">
                   <Label className="flex-shrink-0">Extracted Files ({resFiles.length})</Label>
-                  <div className="flex-1 overflow-y-auto space-y-2 border rounded-md p-2">
+                  <div className="flex-1 min-h-0 overflow-y-auto space-y-2 border rounded-md p-2">
                     {resFiles.map((file, index) => (
                       <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded flex-shrink-0">
                         <span className="text-sm font-mono truncate">
@@ -195,79 +195,79 @@ export const RESManager = ({ onMEFFilesLoaded }: RESManagerProps) => {
             </div>
           </TabsContent>
 
-          <TabsContent value="create" className="mt-4 flex-1 flex flex-col overflow-hidden">
-            <div className="space-y-4 flex-1 flex flex-col overflow-hidden">
-              <div className="space-y-4 flex-shrink-0">
-                <div className="space-y-2">
-                  <Label htmlFor="archive-name">Archive Name</Label>
-                  <Input
-                    id="archive-name"
-                    value={archiveName}
-                    onChange={(e) => setArchiveName(e.target.value)}
-                    placeholder="Enter archive name (without .res extension)"
-                  />
-                </div>
+          <TabsContent value="create" className="mt-4 flex-1 min-h-0 flex flex-col">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="space-y-4 flex-shrink-0">
+                  <div className="space-y-2">
+                    <Label htmlFor="archive-name">Archive Name</Label>
+                    <Input
+                      id="archive-name"
+                      value={archiveName}
+                      onChange={(e) => setArchiveName(e.target.value)}
+                      placeholder="Enter archive name (without .res extension)"
+                    />
+                  </div>
 
-                <Separator />
+                  <Separator />
 
-                <div className="space-y-2">
-                  <Label htmlFor="mef-upload">Add MEF Files</Label>
-                  <Input
-                    id="mef-upload"
-                    type="file"
-                    accept=".mef,.ef"
-                    multiple
-                    onChange={handleMEFUpload}
-                    disabled={isProcessing}
-                  />
-                </div>
-              </div>
-
-              {mefFiles.length > 0 && (
-                <div className="space-y-2 flex-1 flex flex-col overflow-hidden">
-                  <Label className="flex-shrink-0">MEF Files to Pack ({mefFiles.length})</Label>
-                  <div className="flex-1 overflow-y-auto space-y-2 border rounded-md p-2">
-                    {mefFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded flex-shrink-0">
-                        <span className="text-sm font-mono truncate">
-                          {file.name}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-muted-foreground">
-                            {(file.size / 1024).toFixed(1)}KB
-                          </span>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => removeMEFFile(index)}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="space-y-2">
+                    <Label htmlFor="mef-upload">Add MEF Files</Label>
+                    <Input
+                      id="mef-upload"
+                      type="file"
+                      accept=".mef,.ef"
+                      multiple
+                      onChange={handleMEFUpload}
+                      disabled={isProcessing}
+                    />
                   </div>
                 </div>
-              )}
 
-              <div className="space-y-4 flex-shrink-0">
-                {isProcessing && (
-                  <div className="space-y-2">
-                    <Label>Creating RES Archive...</Label>
-                    <Progress value={progress} className="w-full" />
+                {mefFiles.length > 0 && (
+                  <div className="space-y-2 flex-1 flex flex-col min-h-0">
+                    <Label className="flex-shrink-0">MEF Files to Pack ({mefFiles.length})</Label>
+                    <div className="flex-1 min-h-0 overflow-y-auto space-y-2 border rounded-md p-2">
+                      {mefFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded flex-shrink-0">
+                          <span className="text-sm font-mono truncate">
+                            {file.name}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-muted-foreground">
+                              {(file.size / 1024).toFixed(1)}KB
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeMEFFile(index)}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                <Button
-                  onClick={createRESArchive}
-                  disabled={mefFiles.length === 0 || isProcessing}
-                  className="w-full"
-                >
-                  <Package className="w-4 h-4 mr-2" />
-                  Create RES Archive
-                </Button>
+                <div className="space-y-4 flex-shrink-0">
+                  {isProcessing && (
+                    <div className="space-y-2">
+                      <Label>Creating RES Archive...</Label>
+                      <Progress value={progress} className="w-full" />
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={createRESArchive}
+                    disabled={mefFiles.length === 0 || isProcessing}
+                    className="w-full"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    Create RES Archive
+                  </Button>
+                </div>
               </div>
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -33,6 +33,13 @@ interface MEFModel {
   modelInfo?: MEFModelInfo;
 }
 
+// Helper function to parse MEF file from File object
+export const parseMEFFile = async (file: File): Promise<MEFModel> => {
+  const arrayBuffer = await file.arrayBuffer();
+  const parser = new MEFParser(arrayBuffer);
+  return parser.parse();
+};
+
 export class MEFParser {
   private data: ArrayBuffer;
   private view: DataView;
@@ -520,22 +527,4 @@ export class MEFParser {
   public getDebugInfo(): string[] {
     return this.debugInfo;
   }
-}
-
-export async function parseMEFFile(file: File): Promise<MEFModel> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const buffer = e.target?.result as ArrayBuffer;
-        const parser = new MEFParser(buffer);
-        const model = parser.parse();
-        resolve(model);
-      } catch (error) {
-        reject(new Error(`Failed to parse MEF file: ${error instanceof Error ? error.message : 'Unknown error'}`));
-      }
-    };
-    reader.onerror = () => reject(new Error('Failed to read file'));
-    reader.readAsArrayBuffer(file);
-  });
 }
